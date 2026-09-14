@@ -1,6 +1,8 @@
-# 云服务器 Caddy 配置与发布简易指南
+# 云服务器 Caddy 配置与发布简易指南 (零 GitHub 凭证方案)
 
-由于你的云服务器已经运行了 **Caddy**（且同时在跑 `sub2api`），本次接入博客 **0 新增软件安装，0 额外内存开销**！
+采用**本地直连部署**模式：
+- **GitHub 0 凭证**：你的 GitHub 公开仓库中**不需要配置任何服务器 IP、用户名或私钥**！安全风险完全为零。
+- **服务器 0 额外内存开销**：所有繁重的编译都在你本地电脑完成，服务器不需要安装 Node.js，只负责由已有 Caddy 托管生成的轻量静态 HTML 文件，与 `sub2api` 和平共存。
 
 ---
 
@@ -12,13 +14,13 @@
 # 1. 创建博客静态文件目录
 sudo mkdir -p /var/www/blog
 
-# 2. 将目录权限赋予当前登录的用户（假设当前用户是 ubuntu 或 root）
+# 2. 将目录所有权赋予当前登录的用户（假设当前登录用户是 root 或 ubuntu）
 sudo chown -R $USER:$USER /var/www/blog
 ```
 
 ---
 
-## 第二步：在现有 Caddyfile 中追加博客站点配置
+## 第二步：在现有 Caddyfile 中追加博客配置
 
 打开云服务器上的 Caddy 配置文件（通常位于 `/etc/caddy/Caddyfile`）：
 
@@ -41,11 +43,11 @@ blog.yourdomain.com {
 ```
 
 > [!TIP]
-> - `try_files` 保证了所有前端路由和页面正常访问。
-> - `encode zstd gzip` 开启了极致压缩，传输速度更快，流量消耗极少。
-> - Caddy 会**全自动向 Let's Encrypt 申请免费的 HTTPS SSL 证书**，无需手动干预。
+> - `try_files` 保证了所有前端页面正常访问。
+> - `encode zstd gzip` 开启了极致压缩，极度节省服务器带宽。
+> - Caddy 会**全自动向 Let's Encrypt 申请免费的 HTTPS SSL 证书**，无需任何人工干预。
 
-保存后，重新加载 Caddy 即可生效（**不会影响正在运行的 sub2api**）：
+保存后，重载 Caddy 即可生效（**不会断开或影响正在运行的 sub2api**）：
 
 ```bash
 sudo systemctl reload caddy
@@ -55,17 +57,20 @@ caddy reload
 
 ---
 
-## 第三步：在 GitHub 仓库添加自动部署秘钥 (Secrets)
+## 第三步：本地配置与一键极速发布
 
-当你在 GitHub 创建好仓库并把代码 `git push` 上去后：
+你所有的服务器信息**仅保存在你自己的电脑本地**（已加入 `.gitignore`，绝不会上传到 GitHub）：
 
-进入该仓库页面 -> **Settings** -> **Secrets and variables** -> **Actions** -> 点击 **New repository secret**：
+1. 打开项目根目录下的 `.env` 文件，填入你的云服务器 IP 与用户名：
+   ```env
+   SERVER_HOST=你的云服务器公网IP
+   SERVER_USER=root
+   SERVER_PORT=22
+   SERVER_PATH=/var/www/blog
+   ```
 
-| Secret 名称 | 填入的内容示例 | 说明 |
-| :--- | :--- | :--- |
-| `SERVER_HOST` | `123.45.67.89` | 你的云服务器公网 IP 或域名 |
-| `SERVER_USER` | `root` (或 `ubuntu`) | 你的服务器 SSH 登录用户名 |
-| `SERVER_SSH_KEY` | `-----BEGIN OPENSSH PRIVATE KEY-----...` | 能够免密登录你服务器的 SSH 私钥 |
-| `SERVER_PORT` | `22` | SSH 端口（如果是默认 22 可不填） |
-
-配置完成后，今后每当你写好新文章并 `git push` 时，GitHub Actions 就会自动打包并秒级同步到你的云服务器！
+2. 之后，每当你写了新文章或修改了代码，在终端运行：
+   ```bash
+   npm run deploy
+   ```
+   **程序会自动在本地极速编译，并直接通过安全 SSH 传输到云服务器的 Caddy 目录**。秒级生效，安全、可控、极速！
