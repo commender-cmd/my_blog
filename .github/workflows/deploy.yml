@@ -1,13 +1,16 @@
-name: Deploy Blog to Cloud Server
+name: Verify Build
 
 on:
   push:
     branches:
-      - main # 当推送到 main 分支时自动触发部署
-  workflow_dispatch: # 支持在 GitHub 网页上手动点击按钮触发部署
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
-  build-and-deploy:
+  build:
+    name: 静态页面构建检查
     runs-on: ubuntu-latest
     steps:
       - name: 检出代码
@@ -22,23 +25,5 @@ jobs:
       - name: 安装依赖
         run: npm ci || npm install
 
-      - name: 编译构建静态网页
+      - name: 验证静态页面编译
         run: npm run build
-
-      - name: 同步部署到云服务器 (通过 SSH / rsync)
-        uses: easingthemes/ssh-deploy@v5.1.0
-        with:
-          # SSH 私钥，在 GitHub 仓库 Settings -> Secrets and variables -> Actions 中添加
-          SSH_PRIVATE_KEY: ${{ secrets.SERVER_SSH_KEY }}
-          # 待同步的本地构建目录 (Astro 打包产物在 dist/)
-          SOURCE: "dist/"
-          # 你的云服务器公网 IP 或域名
-          REMOTE_HOST: ${{ secrets.SERVER_HOST }}
-          # 服务器登录用户名 (例如 root 或 ubuntu)
-          REMOTE_USER: ${{ secrets.SERVER_USER }}
-          # 服务器 SSH 端口 (默认 22)
-          REMOTE_PORT: ${{ secrets.SERVER_PORT || 22 }}
-          # 云服务器上存放博客网页的绝对路径
-          TARGET: "/var/www/blog"
-          # 同步时删除服务器目标目录中已不存在的多余文件
-          ARGS: "-rlgoDzc -i --delete"
