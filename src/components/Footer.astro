@@ -1,0 +1,46 @@
+---
+const today = new Date();
+---
+
+<footer>
+	<div class="footer-content">
+		<p>&copy; {today.getFullYear()} 个人博客与作品集. All rights reserved.</p>
+		<p class="powered-by">
+			Powered by <a href="https://astro.build" target="_blank" rel="noopener noreferrer">Astro</a> & 
+			Hosted on Cloud Server with <a href="https://caddyserver.com" target="_blank" rel="noopener noreferrer">Caddy</a>
+		</p>
+	</div>
+</footer>
+
+<style>
+	footer {
+		margin-top: auto;
+		padding: 2.5rem 1rem;
+		border-top: 1px solid var(--border-color);
+		background-color: var(--bg-secondary);
+		color: var(--text-muted);
+		text-align: center;
+		font-size: 0.9rem;
+		transition: background-color 0.25s, border-color 0.25s;
+	}
+
+	.footer-content {
+		max-width: 960px;
+		margin: 0 auto;
+	}
+
+	p {
+		margin: 0.35rem 0;
+		color: var(--text-muted);
+	}
+
+	.powered-by a {
+		color: var(--text-secondary);
+		text-decoration: underline;
+		text-underline-offset: 3px;
+	}
+
+	.powered-by a:hover {
+		color: var(--accent);
+	}
+</style>

@@ -1,0 +1,110 @@
+---
+import { SITE_TITLE } from '../consts';
+import HeaderLink from './HeaderLink.astro';
+import ThemeToggle from './ThemeToggle.astro';
+---
+
+<header>
+	<nav>
+		<div class="brand">
+			<a href="/" class="site-title">
+				<span class="logo-emoji">🚀</span>
+				<span>{SITE_TITLE}</span>
+			</a>
+		</div>
+		<div class="nav-right">
+			<div class="internal-links">
+				<HeaderLink href="/">首页</HeaderLink>
+				<HeaderLink href="/blog">博客</HeaderLink>
+				<HeaderLink href="/projects">作品集</HeaderLink>
+				<HeaderLink href="/about">关于</HeaderLink>
+			</div>
+			<div class="actions">
+				<ThemeToggle />
+			</div>
+		</div>
+	</nav>
+</header>
+
+<style>
+	header {
+		position: sticky;
+		top: 0;
+		z-index: 50;
+		background-color: var(--bg-primary);
+		border-bottom: 1px solid var(--border-color);
+		backdrop-filter: blur(8px);
+		transition: background-color 0.25s, border-color 0.25s;
+	}
+
+	nav {
+		max-width: 960px;
+		margin: 0 auto;
+		padding: 0.75rem 1rem;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+	}
+
+	.brand .site-title {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		font-size: 1.15rem;
+		font-weight: 700;
+		color: var(--text-primary);
+		text-decoration: none;
+	}
+
+	.logo-emoji {
+		font-size: 1.25rem;
+	}
+
+	.nav-right {
+		display: flex;
+		align-items: center;
+		gap: 1.25rem;
+	}
+
+	.internal-links {
+		display: flex;
+		align-items: center;
+		gap: 0.25rem;
+	}
+
+	.internal-links :global(a) {
+		padding: 0.45rem 0.75rem;
+		color: var(--text-secondary);
+		border-radius: var(--radius-sm);
+		font-weight: 500;
+		font-size: 0.95rem;
+		text-decoration: none;
+		transition: color 0.15s, background-color 0.15s;
+	}
+
+	.internal-links :global(a:hover) {
+		color: var(--text-primary);
+		background-color: var(--bg-secondary);
+	}
+
+	.internal-links :global(a.active) {
+		color: var(--accent);
+		background-color: var(--accent-subtle);
+		font-weight: 600;
+	}
+
+	.actions {
+		display: flex;
+		align-items: center;
+	}
+
+	@media (max-width: 640px) {
+		.internal-links :global(a) {
+			padding: 0.35rem 0.5rem;
+			font-size: 0.88rem;
+		}
+		.nav-right {
+			gap: 0.5rem;
+		}
+	}
+</style>

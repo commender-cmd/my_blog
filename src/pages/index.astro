@@ -1,0 +1,308 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import FormattedDate from '../components/FormattedDate.astro';
+import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
+import { getCollection } from 'astro:content';
+import { projects } from '../data/projects';
+
+// Fetch recent blog posts sorted by pubDate descending
+const posts = (await getCollection('blog')).sort(
+	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+).slice(0, 3);
+
+const featuredProjects = projects.filter((p) => p.featured);
+---
+
+<!doctype html>
+<html lang="zh-CN">
+	<head>
+		<BaseHead title={`${SITE_TITLE} - 个人独立博客与作品集`} description={SITE_DESCRIPTION} />
+	</head>
+	<body>
+		<Header />
+		<main>
+			<!-- Hero Section -->
+			<section class="hero-section">
+				<div class="status-pill">
+					<span class="pulse-dot"></span>
+					<span>云端 Caddy & Sub2API 服务稳定在线</span>
+				</div>
+				<h1 class="hero-title">
+					探索技术边界，<br />
+					沉淀属于自己的<span class="gradient-text">数字资产</span>。
+				</h1>
+				<p class="hero-bio">
+					你好！这里是我的个人独立主页。我专注于探索全栈开发、自动化脚本与云端自托管服务。
+					坚持用纯粹的 Markdown 记录技术成长，将代码部署在专属的轻量云服务器上。
+				</p>
+				<div class="skills-tags">
+					<span class="badge">Astro</span>
+					<span class="badge">TypeScript</span>
+					<span class="badge">Python</span>
+					<span class="badge">Docker</span>
+					<span class="badge">Caddy</span>
+					<span class="badge">Linux / VPS</span>
+				</div>
+				<div class="hero-actions">
+					<a href="/blog" class="btn btn-primary">📖 阅读最新文章</a>
+					<a href="/projects" class="btn btn-secondary">💻 探索项目作品</a>
+				</div>
+			</section>
+
+			<!-- Featured Projects Section -->
+			<section class="section">
+				<div class="section-header">
+					<h2>🌟 精选作品与服务</h2>
+					<a href="/projects" class="more-link">查看全部项目 &rarr;</a>
+				</div>
+				<div class="projects-grid">
+					{featuredProjects.map((project) => (
+						<ProjectCard project={project} />
+					))}
+				</div>
+			</section>
+
+			<!-- Recent Posts Section -->
+			<section class="section">
+				<div class="section-header">
+					<h2>📝 最新技术博客</h2>
+					<a href="/blog" class="more-link">进入博客列表 &rarr;</a>
+				</div>
+				<div class="posts-list">
+					{posts.map((post) => (
+						<a href={`/blog/${post.id}/`} class="post-item card">
+							<div class="post-info">
+								<div class="post-meta">
+									<FormattedDate date={post.data.pubDate} />
+									{post.data.tags && post.data.tags.length > 0 && (
+										<span class="post-tag">#{post.data.tags[0]}</span>
+									)}
+								</div>
+								<h3 class="post-title">{post.data.title}</h3>
+								<p class="post-desc">{post.data.description}</p>
+							</div>
+							<div class="post-arrow">&rarr;</div>
+						</a>
+					))}
+				</div>
+			</section>
+		</main>
+		<Footer />
+	</body>
+</html>
+
+<style>
+	.hero-section {
+		padding: 2.5rem 0 3.5rem 0;
+		border-bottom: 1px solid var(--border-color);
+		margin-bottom: 3rem;
+	}
+
+	.status-pill {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.5rem;
+		padding: 0.3rem 0.8rem;
+		font-size: 0.82rem;
+		font-weight: 500;
+		background-color: var(--accent-subtle);
+		color: var(--accent);
+		border-radius: 9999px;
+		border: 1px solid var(--accent);
+		margin-bottom: 1.5rem;
+	}
+
+	.pulse-dot {
+		width: 8px;
+		height: 8px;
+		border-radius: 50%;
+		background-color: #22c55e;
+		box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7);
+		animation: pulse 1.8s infinite;
+	}
+
+	@keyframes pulse {
+		0% {
+			transform: scale(0.95);
+			box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7);
+		}
+		70% {
+			transform: scale(1);
+			box-shadow: 0 0 0 6px rgba(34, 197, 94, 0);
+		}
+		100% {
+			transform: scale(0.95);
+			box-shadow: 0 0 0 0 rgba(34, 197, 94, 0);
+		}
+	}
+
+	.hero-title {
+		font-size: 2.75rem;
+		line-height: 1.25;
+		margin: 0 0 1.25rem 0;
+		font-weight: 800;
+	}
+
+	.gradient-text {
+		background: linear-gradient(135deg, var(--accent) 0%, #a855f7 100%);
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
+	}
+
+	.hero-bio {
+		font-size: 1.15rem;
+		color: var(--text-secondary);
+		max-width: 680px;
+		line-height: 1.7;
+		margin-bottom: 1.5rem;
+	}
+
+	.skills-tags {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5rem;
+		margin-bottom: 2rem;
+	}
+
+	.hero-actions {
+		display: flex;
+		align-items: center;
+		gap: 1rem;
+		flex-wrap: wrap;
+	}
+
+	.btn {
+		display: inline-flex;
+		align-items: center;
+		padding: 0.7rem 1.4rem;
+		font-size: 0.95rem;
+		font-weight: 600;
+		border-radius: var(--radius-md);
+		text-decoration: none;
+		transition: all 0.15s ease;
+	}
+
+	.btn-primary {
+		background-color: var(--accent);
+		color: #ffffff;
+	}
+
+	.btn-primary:hover {
+		background-color: var(--accent-hover);
+		color: #ffffff;
+		transform: translateY(-1px);
+	}
+
+	.btn-secondary {
+		background-color: var(--bg-secondary);
+		color: var(--text-primary);
+		border: 1px solid var(--border-color);
+	}
+
+	.btn-secondary:hover {
+		border-color: var(--accent);
+		color: var(--accent);
+		transform: translateY(-1px);
+	}
+
+	.section {
+		margin-bottom: 3.5rem;
+	}
+
+	.section-header {
+		display: flex;
+		justify-content: space-between;
+		align-items: baseline;
+		margin-bottom: 1.5rem;
+	}
+
+	.section-header h2 {
+		margin: 0;
+		font-size: 1.5rem;
+	}
+
+	.more-link {
+		font-size: 0.9rem;
+		font-weight: 500;
+	}
+
+	.projects-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+		gap: 1.25rem;
+	}
+
+	.posts-list {
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
+	}
+
+	.post-item {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		padding: 1.25rem 1.5rem;
+		text-decoration: none;
+	}
+
+	.post-info {
+		flex: 1;
+	}
+
+	.post-meta {
+		display: flex;
+		align-items: center;
+		gap: 0.75rem;
+		font-size: 0.85rem;
+		color: var(--text-muted);
+		margin-bottom: 0.4rem;
+	}
+
+	.post-tag {
+		color: var(--accent);
+		font-weight: 500;
+	}
+
+	.post-title {
+		margin: 0 0 0.35rem 0;
+		font-size: 1.2rem;
+		color: var(--text-primary);
+		transition: color 0.15s;
+	}
+
+	.post-item:hover .post-title {
+		color: var(--accent);
+	}
+
+	.post-desc {
+		margin: 0;
+		font-size: 0.9rem;
+		color: var(--text-secondary);
+		line-height: 1.5;
+	}
+
+	.post-arrow {
+		font-size: 1.25rem;
+		color: var(--text-muted);
+		margin-left: 1.5rem;
+		transition: transform 0.2s, color 0.2s;
+	}
+
+	.post-item:hover .post-arrow {
+		color: var(--accent);
+		transform: translateX(4px);
+	}
+
+	@media (max-width: 640px) {
+		.hero-title {
+			font-size: 2rem;
+		}
+		.projects-grid {
+			grid-template-columns: 1fr;
+		}
+	}
+</style>

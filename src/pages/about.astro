@@ -1,0 +1,51 @@
+---
+import Layout from '../layouts/BlogPost.astro';
+---
+
+<Layout
+	title="关于我与这个站点"
+	description="关于博主、技术栈、云端自托管哲学与联系方式"
+	pubDate={new Date('2026-09-14')}
+	tags={['关于', '个人简介', '技术哲学']}
+>
+	<h2>👋 你好，很高兴认识你！</h2>
+	<p>
+		欢迎来到我的个人数字花园。我是一名热衷于全栈技术、工具打造与自托管探索的开发者。
+		在这个信息爆炸且充斥着封闭平台算法的时代，我始终相信拥有一个**独立、完全属于自己的个人站点与云端节点**，是保持技术纯粹与深度思考最好的方式。
+	</p>
+
+	<hr />
+
+	<h2>🛠️ 当前技术栈与工具链</h2>
+	<p>平时常用的编程语言与开发基础设施：</p>
+	<ul>
+		<li><strong>前端与站点构建</strong>：Astro, TypeScript, React, Tailwind CSS, Vite</li>
+		<li><strong>后端与脚本工具</strong>：Go, Python, Node.js, Shell</li>
+		<li><strong>云服务与自托管</strong>：Linux (Debian/Ubuntu), Docker, Caddy, Nginx, GitHub Actions</li>
+		<li><strong>开发利器</strong>：Google Antigravity, VS Code, Git</li>
+	</ul>
+
+	<hr />
+
+	<h2>☁️ 我的云服务器与自托管理念</h2>
+	<p>
+		云服务器对我来说不仅是一台虚拟机，更是一个充满可能性的私有实验室：
+	</p>
+	<ul>
+		<li><strong>轻量高效</strong>：拒绝臃肿的依赖，用极低内存保持多项服务（如 Sub2API、静态博客、监控脚本）稳定共存；</li>
+		<li><strong>数据私有</strong>：所有核心文章均采用标准的 Markdown 纯文本存储在版本控制系统中，不依赖任何第三方闭源数据库；</li>
+		<li><strong>全自动化</strong>：依靠现代 CI/CD 流水线，将日常运维成本降到最低，把精力集中在创造与思考本身。</li>
+	</ul>
+
+	<hr />
+
+	<h2>📬 联系与交流</h2>
+	<p>
+		如果你对我的项目、技术文章或自托管搭建有任何想法或建议，非常欢迎通过以下渠道与我交流：
+	</p>
+	<ul>
+		<li><strong>GitHub</strong>：关注我的代码动态与开源项目</li>
+		<li><strong>文章评论</strong>：在每篇博客下方通过 GitHub 账号直接留言互动</li>
+		<li><strong>RSS 订阅</strong>：点击导航栏即可一键订阅本站的 RSS 更新源</li>
+	</ul>
+</Layout>

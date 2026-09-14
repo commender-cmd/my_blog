@@ -1,0 +1,111 @@
+---
+import { Image } from 'astro:assets';
+import type { CollectionEntry } from 'astro:content';
+import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
+import FormattedDate from '../components/FormattedDate.astro';
+import Header from '../components/Header.astro';
+import Giscus from '../components/Giscus.astro';
+
+type Props = CollectionEntry<'blog'>['data'];
+
+const { title, description, pubDate, updatedDate, heroImage, tags = [] } = Astro.props;
+---
+
+<!doctype html>
+<html lang="zh-CN">
+	<head>
+		<BaseHead title={title} description={description} />
+		<style>
+			main {
+				width: 820px;
+				max-width: calc(100% - 2rem);
+				margin: 0 auto;
+				padding: 2.5rem 1rem 4rem 1rem;
+			}
+			.hero-image {
+				width: 100%;
+				margin-bottom: 2rem;
+			}
+			.hero-image img {
+				display: block;
+				width: 100%;
+				max-height: 440px;
+				object-fit: cover;
+				border-radius: var(--radius-lg);
+				box-shadow: var(--shadow-md);
+			}
+			.article-header {
+				margin-bottom: 2.5rem;
+				padding-bottom: 1.5rem;
+				border-bottom: 1px solid var(--border-color);
+			}
+			.meta {
+				display: flex;
+				align-items: center;
+				gap: 1rem;
+				margin-bottom: 1rem;
+				flex-wrap: wrap;
+				font-size: 0.9rem;
+				color: var(--text-muted);
+			}
+			.title {
+				font-size: 2.3rem;
+				line-height: 1.3;
+				margin: 0 0 1rem 0;
+				color: var(--text-primary);
+			}
+			.tags {
+				display: flex;
+				gap: 0.5rem;
+				flex-wrap: wrap;
+				margin-top: 1rem;
+			}
+			.tag {
+				font-size: 0.8rem;
+				background-color: var(--bg-secondary);
+				border: 1px solid var(--border-color);
+				color: var(--text-secondary);
+				padding: 0.2rem 0.6rem;
+				border-radius: 9999px;
+			}
+			.article-content {
+				line-height: 1.85;
+			}
+		</style>
+	</head>
+
+	<body>
+		<Header />
+		<main>
+			<article>
+				{heroImage && (
+					<div class="hero-image">
+						<Image width={1020} height={510} src={heroImage} alt="" />
+					</div>
+				)}
+				<header class="article-header">
+					<div class="meta">
+						<FormattedDate date={pubDate} />
+						{updatedDate && (
+							<span>(更新于 <FormattedDate date={updatedDate} />)</span>
+						)}
+					</div>
+					<h1 class="title">{title}</h1>
+					{tags && tags.length > 0 && (
+						<div class="tags">
+							{tags.map((tag) => (
+								<span class="tag">#{tag}</span>
+							))}
+						</div>
+					)}
+				</header>
+				<div class="prose article-content">
+					<slot />
+				</div>
+				<Giscus />
+			</article>
+		</main>
+		<Footer />
+	</body>
+</html>

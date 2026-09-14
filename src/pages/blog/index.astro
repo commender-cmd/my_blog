@@ -1,0 +1,119 @@
+---
+import { getCollection } from 'astro:content';
+import BaseHead from '../../components/BaseHead.astro';
+import Footer from '../../components/Footer.astro';
+import FormattedDate from '../../components/FormattedDate.astro';
+import Header from '../../components/Header.astro';
+import { SITE_DESCRIPTION, SITE_TITLE } from '../../consts';
+
+const posts = (await getCollection('blog')).sort(
+	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
+---
+
+<!doctype html>
+<html lang="zh-CN">
+	<head>
+		<BaseHead title={`技术文章与笔记 - ${SITE_TITLE}`} description={SITE_DESCRIPTION} />
+	</head>
+	<body>
+		<Header />
+		<main>
+			<div class="blog-header">
+				<h1>📚 全部文章与笔记</h1>
+				<p class="subtitle">记录平时遇到的技术思考、踩坑记录与系统架构设计。</p>
+			</div>
+
+			<div class="posts-grid">
+				{posts.map((post) => (
+					<a href={`/blog/${post.id}/`} class="card post-card">
+						<div class="post-meta">
+							<FormattedDate date={post.data.pubDate} />
+							{post.data.tags && post.data.tags.length > 0 && (
+								<div class="tags-list">
+									{post.data.tags.map((tag) => (
+										<span class="tag">#{tag}</span>
+									))}
+								</div>
+							)}
+						</div>
+						<h2 class="post-title">{post.data.title}</h2>
+						<p class="post-desc">{post.data.description}</p>
+						<span class="read-more">阅读全文 &rarr;</span>
+					</a>
+				))}
+			</div>
+		</main>
+		<Footer />
+	</body>
+</html>
+
+<style>
+	.blog-header {
+		margin-bottom: 2.5rem;
+	}
+
+	.subtitle {
+		font-size: 1.1rem;
+		color: var(--text-secondary);
+		margin-top: 0.5rem;
+	}
+
+	.posts-grid {
+		display: grid;
+		grid-template-columns: 1fr;
+		gap: 1.25rem;
+	}
+
+	.post-card {
+		display: flex;
+		flex-direction: column;
+		text-decoration: none;
+		padding: 1.5rem 1.75rem;
+	}
+
+	.post-meta {
+		display: flex;
+		align-items: center;
+		gap: 1rem;
+		flex-wrap: wrap;
+		font-size: 0.88rem;
+		color: var(--text-muted);
+		margin-bottom: 0.5rem;
+	}
+
+	.tags-list {
+		display: flex;
+		gap: 0.4rem;
+	}
+
+	.tag {
+		color: var(--accent);
+		font-weight: 500;
+	}
+
+	.post-title {
+		font-size: 1.35rem;
+		margin: 0.25rem 0 0.5rem 0;
+		color: var(--text-primary);
+		transition: color 0.15s;
+	}
+
+	.post-card:hover .post-title {
+		color: var(--accent);
+	}
+
+	.post-desc {
+		color: var(--text-secondary);
+		font-size: 0.95rem;
+		line-height: 1.6;
+		margin-bottom: 1rem;
+		flex-grow: 1;
+	}
+
+	.read-more {
+		font-size: 0.9rem;
+		font-weight: 600;
+		color: var(--accent);
+	}
+</style>

@@ -1,0 +1,70 @@
+---
+// Giscus comments component using GitHub Discussions
+// Free, zero-backend, zero server memory cost
+---
+
+<div class="giscus-wrapper">
+	<div class="giscus-header">
+		<h3>💬 讨论与评论</h3>
+		<p class="giscus-tip">无需注册新账号，直接使用 GitHub 账号即可发表评论和互动。</p>
+	</div>
+	<div id="giscus-container"></div>
+</div>
+
+<script is:inline>
+	function loadGiscus() {
+		const container = document.getElementById('giscus-container');
+		if (!container) return;
+
+		// Clean up existing script if any
+		container.innerHTML = '';
+
+		const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+		const giscusTheme = currentTheme === 'dark' ? 'dark' : 'light';
+
+		const script = document.createElement('script');
+		script.src = 'https://giscus.app/client.js';
+		script.setAttribute('data-repo', 'your-username/your-repo'); // 填入你的 GitHub 用户名和仓库名
+		script.setAttribute('data-repo-id', '');                     // 按照 giscus.app 指引填入
+		script.setAttribute('data-category', 'Announcements');
+		script.setAttribute('data-category-id', '');                 // 按照 giscus.app 指引填入
+		script.setAttribute('data-mapping', 'pathname');
+		script.setAttribute('data-strict', '0');
+		script.setAttribute('data-reactions-enabled', '1');
+		script.setAttribute('data-emit-metadata', '0');
+		script.setAttribute('data-input-position', 'top');
+		script.setAttribute('data-theme', giscusTheme);
+		script.setAttribute('data-lang', 'zh-CN');
+		script.setAttribute('data-loading', 'lazy');
+		script.crossOrigin = 'anonymous';
+		script.async = true;
+
+		container.appendChild(script);
+	}
+
+	// Load when DOM is ready
+	if (document.readyState === 'loading') {
+		document.addEventListener('DOMContentLoaded', loadGiscus);
+	} else {
+		loadGiscus();
+	}
+</script>
+
+<style>
+	.giscus-wrapper {
+		margin-top: 3.5rem;
+		padding-top: 2rem;
+		border-top: 1px solid var(--border-color);
+	}
+
+	.giscus-header h3 {
+		margin: 0 0 0.25rem 0;
+		font-size: 1.3rem;
+	}
+
+	.giscus-tip {
+		font-size: 0.88rem;
+		color: var(--text-muted);
+		margin-bottom: 1.5rem;
+	}
+</style>

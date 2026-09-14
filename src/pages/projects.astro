@@ -1,0 +1,55 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import { projects } from '../data/projects';
+import { SITE_TITLE } from '../consts';
+---
+
+<!doctype html>
+<html lang="zh-CN">
+	<head>
+		<BaseHead title={`开源与项目作品集 - ${SITE_TITLE}`} description="精选技术项目、实验作品与自托管服务展示" />
+	</head>
+	<body>
+		<Header />
+		<main>
+			<section class="page-header">
+				<h1>💻 项目与作品集</h1>
+				<p class="subtitle">这里收集了我的个人项目、开源工具以及在云服务器上自建运行的各种服务。</p>
+			</section>
+
+			<section class="projects-grid">
+				{projects.map((project) => (
+					<ProjectCard project={project} />
+				))}
+			</section>
+		</main>
+		<Footer />
+	</body>
+</html>
+
+<style>
+	.page-header {
+		margin-bottom: 2.5rem;
+	}
+
+	.subtitle {
+		font-size: 1.1rem;
+		color: var(--text-secondary);
+		margin-top: 0.5rem;
+	}
+
+	.projects-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+		gap: 1.5rem;
+	}
+
+	@media (max-width: 640px) {
+		.projects-grid {
+			grid-template-columns: 1fr;
+		}
+	}
+</style>
